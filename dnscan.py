@@ -277,7 +277,7 @@ def setup():
     resolver.timeout = 1
     resolver.lifetime = 1
     if args.resolver:
-        resolver.nameservers = [ args.resolver ]
+        resolver.nameservers = ["8.8.8.8","8.8.4.4","1.1.1.1","1.0.0.1"]
 
     # Record type
     if args.ipv6:
@@ -318,7 +318,7 @@ if __name__ == "__main__":
         target = subtarget
         out.status("Processing domain {}".format(target))
         if args.resolver:
-            out.status("Using specified resolver {}".format(args.resolver))
+            out.status("Using specified resolver {}".format(resolver.nameservers))
         else:
             out.status("Using system resolvers {}".format(resolver.nameservers))
         if args.tld:
