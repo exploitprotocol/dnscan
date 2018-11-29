@@ -70,7 +70,7 @@ class scanner(threading.Thread):
                         print(address + " - " + col.brown + domain + col.end)
                     if outfile:
                         if args.domain_first:
-                            print(domain + " - " + address, file=outfile)
+                            print(domain, file=outfile)
                         else:
                             print(address + " - " + domain, file=outfile)
                     try:
@@ -96,29 +96,19 @@ class scanner(threading.Thread):
 class output:
     def status(self, message):
         print(col.blue + "[*] " + col.end + message)
-        if outfile:
-            print("[*] " + message, file=outfile)
 
     def good(self, message):
         print(col.green + "[+] " + col.end + message)
-        if outfile:
-            print("[+] " + message, file=outfile)
 
     def verbose(self, message):
         if args.verbose:
             print(col.brown + "[v] " + col.end + message)
-            if outfile:
-                print("[v] " + message, file=outfile)
 
     def warn(self, message):
         print(col.red + "[-] " + col.end + message)
-        if outfile:
-            print("[-] " + message, file=outfile)
 
     def fatal(self, message):
         print("\n" + col.red + "FATAL: " + message + col.end)
-        if outfile:
-            print("FATAL " + message, file=outfile)
 
 
 class col:
@@ -172,8 +162,6 @@ def get_v6(target):
             out.good("IPv6 (AAAA) records found. Try running dnscan with the "+ col.green + "-6 " + col.end + "option.")
         for v6 in res:
             print(str(v6) + "\n")
-            if outfile:
-                print(v6, file=outfile)
     except:
         return
 
@@ -185,8 +173,6 @@ def get_txt(target):
             out.good("TXT records found")
         for txt in res:
             print(txt)
-            if outfile:
-                print(txt, file=outfile)
         print("")
     except:
         return
@@ -203,8 +189,6 @@ def get_mx(target):
     out.good("MX records found, added to target list")
     for mx in res:
         print(mx.to_text())
-        if outfile:
-            print(mx.to_text(), file=outfile)
         mxsub = re.search("([a-z0-9\.\-]+)\."+target, mx.to_text(), re.IGNORECASE)
         try:
             if mxsub.group(1) and mxsub.group(1) not in wordlist:
@@ -223,8 +207,6 @@ def zone_transfer(domain, ns):
         names.sort()
         for n in names:
             print(zone[n].to_text(n))    # Print raw zone
-            if outfile:
-                print(zone[n].to_text(n), file=outfile)
         sys.exit(0)
     except Exception:
         pass
@@ -357,8 +339,6 @@ if __name__ == "__main__":
                     for rdata in res:
                         targetns.append(rdata.address)
                         print(rdata.address + " - " + col.brown + ns + col.end)
-                        if outfile:
-                            print(rdata.address + " - " + ns, file=outfile)
                     zone_transfer(target, ns)
             except SystemExit:
                 sys.exit(0)
